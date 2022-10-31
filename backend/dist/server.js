@@ -6,15 +6,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const errorMiddleware_1 = __importDefault(require("./middleware/errorMiddleware"));
 dotenv_1.default.config();
 const PORT = process.env.PORT || 3030;
 const app = (0, express_1.default)();
+app.use(express_1.default.json());
+app.use(express_1.default.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
     res.status(200).json({ message: "Welcome to support desk API" });
 });
 // Routes
 app.use("/api/users", userRoutes_1.default);
-app.use((err, req, res, next) => {
-    res.status(500).json({ message: err.message });
-});
+app.use(errorMiddleware_1.default);
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
