@@ -10,10 +10,10 @@ const connectDB = async () => {
         if (!mongoUri)
             throw new Error("Could not read Mongo URI from env file.");
         const mongoConnection = await mongoose_1.default.connect(mongoUri);
-        console.log(`Mongo DB connected: ${mongoConnection.connection.host}`);
+        console.log(`Mongo DB connected: ${mongoConnection.connection.host}`.cyan);
     }
     catch (error) {
-        console.log(`Error connecting to Mongo DB: ${error.message}`);
+        console.log(`Error connecting to Mongo DB: ${error.message}`.red);
         process.exit(1);
     }
 };

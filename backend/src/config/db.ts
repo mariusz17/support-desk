@@ -8,9 +8,11 @@ const connectDB = async () => {
 
     const mongoConnection = await mongoose.connect(mongoUri);
 
-    console.log(`Mongo DB connected: ${mongoConnection.connection.host}`);
+    console.log(`Mongo DB connected: ${mongoConnection.connection.host}`.cyan);
   } catch (error) {
-    console.log(`Error connecting to Mongo DB: ${(error as Error).message}`);
+    console.log(
+      `Error connecting to Mongo DB: ${(error as Error).message}`.red
+    );
     process.exit(1);
   }
 };

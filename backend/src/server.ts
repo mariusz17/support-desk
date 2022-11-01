@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes";
 import errorHandler from "./middleware/errorMiddleware";
 import connectDB from "./config/db";
+import "colors";
 
 dotenv.config();
 
@@ -16,7 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.status(200).json({ message: "Welcome to support desk API" });
 });
 
