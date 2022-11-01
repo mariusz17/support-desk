@@ -9,14 +9,14 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 //@desc		Register a new user
 //@route	/api/users
 //@access	Public
-const registerUser = async (req, res) => {
-    const { name, email, password } = req.body;
-    // Validation
-    if (!name || !email || !password) {
-        res.status(400);
-        throw new Error("Please include all fields");
-    }
+const registerUser = async (req, res, next) => {
     try {
+        const { name, email, password } = req.body;
+        // Validation
+        if (!name || !email || !password) {
+            res.status(400);
+            throw new Error("Please include all fields");
+        }
         // Find if user already exists
         const userExists = await userModel_1.default.findOne({ email });
         if (userExists) {
@@ -44,8 +44,7 @@ const registerUser = async (req, res) => {
         }
     }
     catch (e) {
-        res.status(500);
-        throw new Error(`Error registering a user: ${e}`);
+        next(e);
     }
 };
 exports.registerUser = registerUser;

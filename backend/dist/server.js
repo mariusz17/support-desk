@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3030;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));
-app.get("/", (_req, res) => {
+app.get("/", (req, res) => {
     res.status(200).json({ message: "Welcome to support desk API" });
 });
 // Routes

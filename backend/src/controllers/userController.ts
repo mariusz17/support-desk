@@ -15,17 +15,18 @@ export const registerUser: RequestHandler = async (
     email: string;
     password: string;
   }>,
-  res
+  res,
+  next
 ) => {
-  const { name, email, password } = req.body;
-
-  // Validation
-  if (!name || !email || !password) {
-    res.status(400);
-    throw new Error("Please include all fields");
-  }
-
   try {
+    const { name, email, password } = req.body;
+
+    // Validation
+    if (!name || !email || !password) {
+      res.status(400);
+      throw new Error("Please include all fields");
+    }
+
     // Find if user already exists
     const userExists = await User.findOne({ email });
 
@@ -55,8 +56,7 @@ export const registerUser: RequestHandler = async (
       throw new Error("Invalid user data");
     }
   } catch (e) {
-    res.status(500);
-    throw new Error(`Error registering a user: ${e}`);
+    next(e);
   }
 };
 
