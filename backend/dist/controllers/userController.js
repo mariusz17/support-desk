@@ -5,7 +5,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = exports.registerUser = void 0;
 const bcryptjs_1 = require("bcryptjs");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = __importDefault(require("../models/userModel"));
+const env_1 = __importDefault(require("../config/env"));
 //@desc		Register a new user
 //@route	/api/users
 //@access	Public
@@ -36,6 +38,7 @@ const registerUser = async (req, res, next) => {
                 _id: user._id,
                 name: user.name,
                 email: user.email,
+                token: generateToken(user._id),
             });
         }
         else {
@@ -51,7 +54,36 @@ exports.registerUser = registerUser;
 //@desc		Login a user
 //@route	/api/users/login
 //@access	Public
-const loginUser = (req, res) => {
-    res.send("Login route");
+const loginUser = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        // Validation
+        if (!email || !password) {
+            res.status(400);
+            throw new Error("Please include all fields");
+        }
+        const user = await userModel_1.default.findOne({ email });
+        // Check user and passwords match
+        if (user && (await (0, bcryptjs_1.compare)(password, user.password))) {
+            res.status(200).json({
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                token: generateToken(user._id),
+            });
+        }
+        else {
+            res.status(401);
+            throw new Error("Invalid credentials");
+        }
+    }
+    catch (e) {
+        next(e);
+    }
 };
 exports.loginUser = loginUser;
+const generateToken = (id) => {
+    return jsonwebtoken_1.default.sign({ id }, env_1.default.JWT_SECRET, {
+        expiresIn: "30d",
+    });
+};

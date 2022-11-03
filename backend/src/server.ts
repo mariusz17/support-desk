@@ -1,16 +1,17 @@
 import express from "express";
-import dotenv from "dotenv";
+// import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes";
 import errorHandler from "./middleware/errorMiddleware";
 import connectDB from "./config/db";
+import env from "./config/env";
 import "colors";
 
-dotenv.config();
+// dotenv.config();
 
 // Connect to database
 connectDB();
 
-const PORT = process.env.PORT || 3030;
+const PORT = env.PORT;
 
 const app = express();
 

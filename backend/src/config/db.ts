@@ -1,12 +1,9 @@
 import mongoose from "mongoose";
+import env from "./env";
 
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGO_URI;
-
-    if (!mongoUri) throw new Error("Could not read Mongo URI from env file.");
-
-    const mongoConnection = await mongoose.connect(mongoUri);
+    const mongoConnection = await mongoose.connect(env.MONGO_URI);
 
     console.log(`Mongo DB connected: ${mongoConnection.connection.host}`.cyan);
   } catch (error) {
