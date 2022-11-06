@@ -4,16 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-// import dotenv from "dotenv";
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const errorMiddleware_1 = __importDefault(require("./middleware/errorMiddleware"));
-const db_1 = __importDefault(require("./config/db"));
-const env_1 = __importDefault(require("./config/env"));
+const config_1 = require("./config/config");
 require("colors");
-// dotenv.config();
 // Connect to database
-(0, db_1.default)();
-const PORT = env_1.default.PORT;
+(0, config_1.connectDB)();
+const PORT = config_1.config.PORT;
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: false }));

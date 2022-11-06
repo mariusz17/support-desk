@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-import env from "../config/env";
+import { config } from "../config/config";
 
 const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   const statusCode = res.statusCode ? res.statusCode : 500;
@@ -7,7 +7,7 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   res.status(statusCode);
   res.json({
     message: err.message,
-    stack: env.NODE_ENV === "production" ? null : err.stack,
+    stack: config.NODE_ENV === "production" ? null : err.stack,
   });
 };
 

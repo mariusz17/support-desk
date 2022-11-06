@@ -1,17 +1,13 @@
 import express from "express";
-// import dotenv from "dotenv";
 import userRoutes from "./routes/userRoutes";
 import errorHandler from "./middleware/errorMiddleware";
-import connectDB from "./config/db";
-import env from "./config/env";
+import { connectDB, config } from "./config/config";
 import "colors";
-
-// dotenv.config();
 
 // Connect to database
 connectDB();
 
-const PORT = env.PORT;
+const PORT = config.PORT;
 
 const app = express();
 

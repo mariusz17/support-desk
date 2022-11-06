@@ -3,11 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.loginUser = exports.registerUser = void 0;
+exports.getMe = exports.loginUser = exports.registerUser = void 0;
 const bcryptjs_1 = require("bcryptjs");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const userModel_1 = __importDefault(require("../models/userModel"));
-const env_1 = __importDefault(require("../config/env"));
+const config_1 = require("../config/config");
 //@desc		Register a new user
 //@route	/api/users
 //@access	Public
@@ -82,8 +82,25 @@ const loginUser = async (req, res, next) => {
     }
 };
 exports.loginUser = loginUser;
+//@desc		Get current user
+//@route	/api/users/me
+//@access	Private
+const getMe = async (req, res, next) => {
+    try {
+        const user = {
+            id: req.body.user._id.toString(),
+            email: req.body.user.email,
+            name: req.body.user.name,
+        };
+        res.status(200).json(user);
+    }
+    catch (e) {
+        next(e);
+    }
+};
+exports.getMe = getMe;
 const generateToken = (id) => {
-    return jsonwebtoken_1.default.sign({ id }, env_1.default.JWT_SECRET, {
+    return jsonwebtoken_1.default.sign({ id }, config_1.config.JWT_SECRET, {
         expiresIn: "30d",
     });
 };

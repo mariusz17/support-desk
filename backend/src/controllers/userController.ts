@@ -1,13 +1,13 @@
-import { RequestHandler, Request } from "express";
 import { genSalt, hash, compare } from "bcryptjs";
-import { Types } from "mongoose";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel";
-import env from "../config/env";
+import { config } from "../config/config";
 
-interface TypedRequestBody<T> extends Request {
-  body: T;
-}
+// Import types
+import { RequestHandler } from "express";
+import { Types } from "mongoose";
+import { TypedRequestBody } from "../models/requestTypes";
+import { IUser } from "../models/userModel";
 
 //@desc		Register a new user
 //@route	/api/users
@@ -103,8 +103,29 @@ export const loginUser: RequestHandler = async (
   }
 };
 
+//@desc		Get current user
+//@route	/api/users/me
+//@access	Private
+export const getMe: RequestHandler = async (
+  req: TypedRequestBody<{ user: IUser }>,
+  res,
+  next
+) => {
+  try {
+    const user = {
+      id: req.body.user._id.toString(),
+      email: req.body.user.email,
+      name: req.body.user.name,
+    };
+
+    res.status(200).json(user);
+  } catch (e) {
+    next(e);
+  }
+};
+
 const generateToken = (id: Types.ObjectId) => {
-  return jwt.sign({ id }, env.JWT_SECRET, {
+  return jwt.sign({ id }, config.JWT_SECRET, {
     expiresIn: "30d",
   });
 };
