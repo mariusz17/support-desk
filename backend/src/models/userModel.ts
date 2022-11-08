@@ -5,7 +5,7 @@ export interface IUser {
   email: string;
   password: string;
   isAdmin: boolean;
-  _id: mongoose.Types.ObjectId;
+  _id?: mongoose.Types.ObjectId;
 }
 
 const userSchema = new mongoose.Schema<IUser>(

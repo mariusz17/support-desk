@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es2018",
     "module": "commonjs",
-    "rootDir": "backend/src",
-    "outDir": "backend/dist",
+    "rootDir": "src",
+    "outDir": "dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
