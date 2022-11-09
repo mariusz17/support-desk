@@ -113,7 +113,7 @@ export const getMe: RequestHandler = async (
 ) => {
   try {
     const user = {
-      id: req.body.user._id?.toString(),
+      id: req.body.user._id?.toString() || "Could not get user id.",
       email: req.body.user.email,
       name: req.body.user.name,
     };
