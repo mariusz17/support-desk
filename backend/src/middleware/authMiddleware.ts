@@ -7,7 +7,7 @@ import { RequestHandler, Request } from "express";
 import { IUser } from "../models/userModel";
 import { TypedRequestBody } from "../models/requestTypes";
 
-interface MyDecodedToken extends jwt.JwtPayload {
+interface DecodedToken extends jwt.JwtPayload {
   id: string;
 }
 
@@ -20,9 +20,11 @@ const protect: RequestHandler = async (req, res, next) => {
       // Get token from header
       const token = req.headers.authorization.split(" ")[1];
       // Verify token
-      const decoded = jwt.verify(token, config.JWT_SECRET) as MyDecodedToken;
+      const decoded = jwt.verify(token, config.JWT_SECRET);
       // Get user from token
-      const user = await User.findById(decoded.id).select("-password");
+      const user = await User.findById((decoded as DecodedToken).id).select(
+        "-password"
+      );
       // Check if user is found
       if (user === null) {
         throw new Error("User not found");
