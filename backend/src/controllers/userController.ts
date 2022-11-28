@@ -4,10 +4,10 @@ import User from "../models/userModel";
 import { config } from "../config/config";
 
 // Import types
-import { RequestHandler } from "express";
-import { Types } from "mongoose";
-import { TypedRequestBody } from "../models/requestTypes";
-import { IUser } from "../models/userModel";
+import type { RequestHandler } from "express";
+import type { Types } from "mongoose";
+import type { TypedRequestBody } from "../models/requestTypes";
+import type { IUser } from "../models/userModel";
 
 //@desc		Register a new user
 //@route	/api/users
@@ -30,7 +30,7 @@ export const registerUser: RequestHandler = async (
       throw new Error("Please include all fields");
     }
 
-    // Find if user already exists
+    // Check if user already exists
     const userExists = await User.findOne({ email });
 
     if (userExists) {

@@ -1,14 +1,20 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// interface InitialState {
-//   user: string | null;
-//   isError: boolean;
-//   isSuccess: boolean;
-//   isLoading: boolean;
-//   message: string;
-// }
+type User = {
+  email: string;
+  password: string;
+  name?: string;
+};
 
-const initialState = {
+interface InitialState {
+  user: string | null;
+  isError: boolean;
+  isSuccess: boolean;
+  isLoading: boolean;
+  message: string;
+}
+
+const initialState: InitialState = {
   user: null,
   isError: false,
   isSuccess: false,
@@ -16,11 +22,32 @@ const initialState = {
   message: "",
 };
 
+// Register new user
+export const register = createAsyncThunk(
+  "auth/register",
+  async (user: User, thunkAPI) => {
+    console.log(user);
+  }
+);
+
+// Login user
+export const login = createAsyncThunk(
+  "auth/login",
+  async (user: User, thunkAPI) => {
+    console.log(user);
+  }
+);
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {},
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(register.pending, () => {})
+      .addCase(register.fulfilled, () => {})
+      .addCase(register.rejected, () => {});
+  },
 });
 
 export default authSlice.reducer;
