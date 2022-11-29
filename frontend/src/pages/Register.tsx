@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { register } from "../features/auth/authSlice";
+import { register, reset } from "../features/auth/authSlice";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,14 +12,26 @@ const Register = () => {
     password: "",
     password2: "",
   });
-
   const { name, email, password, password2 } = formData;
-
   const dispatch = useAppDispatch();
-
-  const { user, isLoading, isSuccess, message } = useAppSelector(
+  const navigate = useNavigate();
+  const { user, isLoading, isError, isSuccess, message } = useAppSelector(
     (state) => state.auth
   );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+
+    // Redirect if logged in
+    if (isSuccess && user) {
+      toast.success("Registration successful");
+      navigate("/");
+    }
+
+    dispatch(reset());
+  }, [isError, isSuccess, user, message, dispatch, navigate]);
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
