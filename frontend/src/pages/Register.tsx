@@ -22,15 +22,13 @@ const Register = () => {
   useEffect(() => {
     if (isError) {
       toast.error(message);
+      dispatch(reset());
     }
 
     // Redirect if logged in
-    if (isSuccess && user) {
-      toast.success("Registration successful");
+    if (isSuccess || user) {
       navigate("/");
     }
-
-    dispatch(reset());
   }, [isError, isSuccess, user, message, dispatch, navigate]);
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
