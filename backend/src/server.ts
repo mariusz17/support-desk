@@ -1,5 +1,6 @@
 import express from "express";
 import userRoutes from "./routes/userRoutes";
+import ticketRoutes from "./routes/ticketRoutes";
 import errorHandler from "./middleware/errorMiddleware";
 import { connectDB, config } from "./config/config";
 import "colors";
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/api/users", userRoutes);
+app.use("/api/tickets", ticketRoutes);
 
 app.use(errorHandler);
 
