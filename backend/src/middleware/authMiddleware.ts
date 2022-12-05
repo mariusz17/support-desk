@@ -3,7 +3,7 @@ import User from "../models/userModel";
 import { config } from "../config/config";
 
 // Import types
-import { RequestHandler, Request } from "express";
+import { RequestHandler } from "express";
 import { IUser } from "../models/userModel";
 import { TypedRequestBody } from "../models/requestTypes";
 
