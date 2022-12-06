@@ -4,14 +4,22 @@ import { config } from "../config/config";
 
 // Import types
 import { RequestHandler } from "express";
-import { IUser } from "../models/userModel";
-import { TypedRequestBody } from "../models/requestTypes";
 
 interface DecodedToken extends jwt.JwtPayload {
   id: string;
 }
 
-const protect: RequestHandler = async (req, res, next) => {
+export interface VerifiedUser {
+  name: string;
+  email: string;
+  id: string;
+}
+
+const protect: RequestHandler<{}, any, { user: VerifiedUser }> = async (
+  req,
+  res,
+  next
+) => {
   try {
     if (
       req.headers.authorization &&
@@ -20,24 +28,26 @@ const protect: RequestHandler = async (req, res, next) => {
       // Get token from header
       const token = req.headers.authorization.split(" ")[1];
       // Verify token
-      const decoded = jwt.verify(token, config.JWT_SECRET);
+      const decoded = jwt.verify(token, config.JWT_SECRET) as DecodedToken;
       // Get user from token
-      const user = await User.findById((decoded as DecodedToken).id).select(
-        "-password"
-      );
+      const user = await User.findById(decoded.id).select("-password");
       // Check if user is found
       if (user === null) {
         throw new Error("User not found");
       }
 
-      (req as TypedRequestBody<{ user: IUser }>).body.user = user;
+      req.body.user = {
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+      };
 
       next();
     } else {
       throw new Error("Token not found");
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
     res.status(401);
     next(new Error("Not authorized"));
   }

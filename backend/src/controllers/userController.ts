@@ -6,21 +6,16 @@ import { config } from "../config/config";
 // Import types
 import type { RequestHandler } from "express";
 import type { Types } from "mongoose";
-import type { TypedRequestBody } from "../models/requestTypes";
-import type { IUser } from "../models/userModel";
+import type { VerifiedUser } from "../middleware/authMiddleware";
 
 //@desc		Register a new user
 //@route	/api/users
 //@access	Public
-export const registerUser: RequestHandler = async (
-  req: TypedRequestBody<{
-    name: string;
-    email: string;
-    password: string;
-  }>,
-  res,
-  next
-) => {
+export const registerUser: RequestHandler<
+  {},
+  any,
+  { name: string; email: string; password: string }
+> = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
@@ -50,7 +45,7 @@ export const registerUser: RequestHandler = async (
 
     if (user) {
       res.status(201).json({
-        _id: user._id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email,
         token: generateToken(user._id),
@@ -67,14 +62,14 @@ export const registerUser: RequestHandler = async (
 //@desc		Login a user
 //@route	/api/users/login
 //@access	Public
-export const loginUser: RequestHandler = async (
-  req: TypedRequestBody<{
+export const loginUser: RequestHandler<
+  {},
+  any,
+  {
     email: string;
     password: string;
-  }>,
-  res,
-  next
-) => {
+  }
+> = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -89,7 +84,7 @@ export const loginUser: RequestHandler = async (
     // Check user and passwords match
     if (user && (await compare(password, user.password))) {
       res.status(200).json({
-        _id: user._id,
+        id: user._id.toString(),
         name: user.name,
         email: user.email,
         token: generateToken(user._id),
@@ -106,14 +101,14 @@ export const loginUser: RequestHandler = async (
 //@desc		Get current user
 //@route	/api/users/me
 //@access	Private
-export const getMe: RequestHandler = async (
-  req: TypedRequestBody<{ user: IUser }>,
+export const getMe: RequestHandler<{}, any, { user: VerifiedUser }> = async (
+  req,
   res,
   next
 ) => {
   try {
     const user = {
-      id: req.body.user._id?.toString() || "Could not get user id.",
+      id: req.body.user.id,
       email: req.body.user.email,
       name: req.body.user.name,
     };
