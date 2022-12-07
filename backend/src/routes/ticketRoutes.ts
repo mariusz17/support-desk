@@ -3,12 +3,18 @@ import {
   getTickets,
   getTicket,
   createTicket,
+  updateTicket,
+  deleteTicket,
 } from "../controllers/ticketController";
 import protect from "../middleware/authMiddleware";
 
 const router = express.Router();
 
 router.route("/").get(protect, getTickets).post(protect, createTicket);
-router.get("/:id", protect, getTicket);
+router
+  .route("/:id")
+  .get(protect, getTicket)
+  .put(protect, updateTicket)
+  .delete(protect, deleteTicket);
 
 export default router;

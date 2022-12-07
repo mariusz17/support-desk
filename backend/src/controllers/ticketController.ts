@@ -7,28 +7,25 @@ import type { VerifiedUser } from "../middleware/authMiddleware";
 //@desc		Get tickets
 //@route	GET /api/tickets
 //@access	Private
-export const getTickets: RequestHandler<
-  {},
-  ITicket[],
-  { user: VerifiedUser }
-> = async (req, res, next) => {
-  try {
-    //get user using id in the JWT
-    const user = await User.findById(req.body.user.id);
+export const getTickets: RequestHandler<{}, ITicket[], { user: VerifiedUser }> =
+  async (req, res, next) => {
+    try {
+      //get user using id in the JWT
+      const user = await User.findById(req.body.user.id);
 
-    if (!user) {
-      throw new Error("User not found");
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const tickets = await Ticket.find({
+        user: req.body.user.id,
+      });
+
+      res.status(200).json(tickets);
+    } catch (error) {
+      next(error);
     }
-
-    const tickets = await Ticket.find({
-      user: req.body.user.id,
-    });
-
-    res.status(200).json(tickets);
-  } catch (error) {
-    next(error);
-  }
-};
+  };
 
 //@desc		Get one ticket
 //@route	GET /api/ticket/:id
@@ -46,10 +43,7 @@ export const getTicket: RequestHandler<
       throw new Error("User not found");
     }
 
-    if (!isValidObjectId(req.params.id)) {
-      res.status(404);
-      throw new Error("Ticket not found");
-    } else {
+    if (isValidObjectId(req.params.id)) {
       const ticket = await Ticket.findById(req.params.id);
 
       if (!ticket) {
@@ -63,6 +57,104 @@ export const getTicket: RequestHandler<
       }
 
       res.status(200).json(ticket);
+    } else {
+      res.status(404);
+      throw new Error("Ticket not found");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+//@desc		Delete ticket
+//@route	DELETE /api/ticket/:id
+//@access	Private
+export const deleteTicket: RequestHandler<
+  { id: string },
+  { success: boolean },
+  { user: VerifiedUser }
+> = async (req, res, next) => {
+  try {
+    //get user using id in the JWT
+    const user = await User.findById(req.body.user.id);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (isValidObjectId(req.params.id)) {
+      const ticket = await Ticket.findById(req.params.id);
+
+      if (!ticket) {
+        res.status(404);
+        throw new Error("Ticket not found");
+      }
+
+      if (ticket.user.toString() !== req.body.user.id) {
+        res.status(401);
+        throw new Error("Not authorized");
+      }
+
+      await ticket.remove();
+
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404);
+      throw new Error("Ticket not found");
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+//@desc		Update ticket
+//@route	PUT /api/ticket/:id
+//@access	Private
+export const updateTicket: RequestHandler<
+  { id: string },
+  ITicket,
+  {
+    user: VerifiedUser;
+    product: string;
+    description: string;
+    status: string;
+  }
+> = async (req, res, next) => {
+  try {
+    //get user using id in the JWT
+    const user = await User.findById(req.body.user.id);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (isValidObjectId(req.params.id)) {
+      const ticket = await Ticket.findById(req.params.id);
+
+      if (!ticket) {
+        res.status(404);
+        throw new Error("Ticket not found");
+      }
+
+      if (ticket.user.toString() !== req.body.user.id) {
+        res.status(401);
+        throw new Error("Not authorized");
+      }
+
+      const updatedTicket = (await Ticket.findByIdAndUpdate(
+        req.params.id,
+        {
+          product: req.body.product,
+          description: req.body.description,
+          status: req.body.status,
+        },
+        { new: true }
+      )) as ITicket;
+
+      res.status(200).json(updatedTicket);
+    } else {
+      res.status(404);
+      throw new Error("Ticket not found");
     }
   } catch (error) {
     next(error);
