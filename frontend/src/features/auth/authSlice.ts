@@ -20,7 +20,7 @@ interface InitialState {
 
 // Get user from local storage
 const userJSON = localStorage.getItem("user");
-const user = userJSON ? JSON.parse(userJSON) : null;
+const user = userJSON ? JSON.parse(userJSON) as User : null;
 
 const initialState: InitialState = {
   user,

@@ -6,7 +6,7 @@ const Home: React.FC = () => {
     <>
       <section className="heading">
         <h1>What do you need help with?</h1>
-        <p>Please chose from an option below</p>
+        <p>Please choose from an option below</p>
       </section>
 
       <Link to="/new-ticket" className="btn btn-reverse btn-block">
