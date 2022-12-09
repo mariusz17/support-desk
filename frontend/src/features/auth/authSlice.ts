@@ -7,7 +7,7 @@ export type User = {
   password: string;
   name?: string;
   token?: string;
-  _id?: number;
+  id?: number;
 };
 
 interface InitialState {
@@ -20,7 +20,7 @@ interface InitialState {
 
 // Get user from local storage
 const userJSON = localStorage.getItem("user");
-const user = userJSON ? JSON.parse(userJSON) as User : null;
+const user = userJSON ? (JSON.parse(userJSON) as User) : null;
 
 const initialState: InitialState = {
   user,
