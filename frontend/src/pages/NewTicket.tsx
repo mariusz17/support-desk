@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAppSelector } from "../app/hooks";
 import { User } from "../features/auth/authSlice";
-import { getTickets } from "../features/tickets/ticketSlice";
 
 const NewTicket = () => {
   const auth = useAppSelector((state) => state.auth);
