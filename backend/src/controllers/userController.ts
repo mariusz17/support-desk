@@ -9,7 +9,7 @@ import type { Types } from "mongoose";
 import type { VerifiedUser } from "../middleware/authMiddleware";
 
 //@desc		Register a new user
-//@route	/api/users
+//@route	POST /api/users
 //@access	Public
 export const registerUser: RequestHandler<
   {},
@@ -60,7 +60,7 @@ export const registerUser: RequestHandler<
 };
 
 //@desc		Login a user
-//@route	/api/users/login
+//@route	POST /api/users/login
 //@access	Public
 export const loginUser: RequestHandler<
   {},
@@ -99,7 +99,7 @@ export const loginUser: RequestHandler<
 };
 
 //@desc		Get current user
-//@route	/api/users/me
+//@route	GET /api/users/me
 //@access	Private
 export const getMe: RequestHandler<{}, any, { user: VerifiedUser }> = async (
   req,
