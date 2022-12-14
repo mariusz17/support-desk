@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     dispatch(getMe());
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) {
     return <Spinner />;
