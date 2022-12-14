@@ -16,21 +16,19 @@ const Register = () => {
   const { name, email, password, password2 } = formData;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user, isLoading, isError, isSuccess, message } = useAppSelector(
-    (state) => state.auth
-  );
+  const { user, isLoading, message } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    if (isError) {
+    if (message) {
       toast.error(message);
       dispatch(reset());
     }
 
     // Redirect if logged in
-    if (isSuccess || user) {
+    if (user) {
       navigate("/");
     }
-  }, [isError, isSuccess, user, message, dispatch, navigate]);
+  }, [user, message, dispatch, navigate]);
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
@@ -55,6 +53,7 @@ const Register = () => {
         name,
         email,
         password,
+        password2,
       };
 
       dispatch(register(userData));

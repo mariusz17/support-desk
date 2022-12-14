@@ -1,46 +1,39 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
 import authService from "./authService";
+import type { UserLogin, UserRegister, UserLocalStorage } from "../types";
 
-export type User = {
-  email: string;
-  password: string;
-  name?: string;
-  token?: string;
-  id?: number;
-};
-
-interface InitialState {
-  user: User | null;
-  isError: boolean;
-  isSuccess: boolean;
+export interface InitialState {
+  user: UserLocalStorage | null;
   isLoading: boolean;
   message: string;
 }
 
-// Get user from local storage
-const userJSON = localStorage.getItem("user");
-const user = userJSON ? (JSON.parse(userJSON) as User) : null;
-
 const initialState: InitialState = {
-  user,
-  isError: false,
-  isSuccess: false,
+  user: null,
   isLoading: false,
   message: "",
 };
 
 // Register new user
-export const register = createAsyncThunk(
+export const register = createAsyncThunk<UserLocalStorage, UserRegister>(
   "auth/register",
-  async (user: User) => {
+  async (user) => {
     return await authService.register(user);
   }
 );
 
 // Login user
-export const login = createAsyncThunk("auth/login", async (user: User) => {
-  return await authService.login(user);
+export const login = createAsyncThunk<UserLocalStorage, UserLogin>(
+  "auth/login",
+  async (user) => {
+    return await authService.login(user);
+  }
+);
+
+// Get user from local storage and authorize by backend
+export const getMe = createAsyncThunk("auth/getMe", async () => {
+  return await authService.getMe();
 });
 
 export const authSlice = createSlice({
@@ -48,13 +41,14 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => {
-      state.isError = false;
       state.isLoading = false;
-      state.isSuccess = false;
       state.message = "";
       state.user = null;
     },
-    logout: () => {
+    logout: (state) => {
+      state.isLoading = false;
+      state.message = "";
+      state.user = null;
       localStorage.removeItem("user");
     },
   },
@@ -63,30 +57,50 @@ export const authSlice = createSlice({
       .addCase(register.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(register.fulfilled, (state, action: PayloadAction<User>) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.user = action.payload;
-      })
+      .addCase(
+        register.fulfilled,
+        (state, action: PayloadAction<UserLocalStorage>) => {
+          state.isLoading = false;
+          state.message = "";
+          state.user = action.payload;
+        }
+      )
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
-        state.isError = true;
         state.user = null;
         state.message = action.error.message || "Unknown error";
       })
       .addCase(login.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
-        state.isLoading = false;
-        state.isSuccess = true;
-        state.user = action.payload;
-      })
+      .addCase(
+        login.fulfilled,
+        (state, action: PayloadAction<UserLocalStorage>) => {
+          state.isLoading = false;
+          state.message = "";
+          state.user = action.payload;
+        }
+      )
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
-        state.isError = true;
         state.user = null;
         state.message = action.error.message || "Unknown error";
+      })
+      .addCase(getMe.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        getMe.fulfilled,
+        (state, action: PayloadAction<UserLocalStorage>) => {
+          state.isLoading = false;
+          state.message = "";
+          state.user = action.payload;
+        }
+      )
+      .addCase(getMe.rejected, (state) => {
+        state.isLoading = false;
+        state.user = null;
+        state.message = "";
       });
   },
 });

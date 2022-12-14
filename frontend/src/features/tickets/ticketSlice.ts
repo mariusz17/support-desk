@@ -1,35 +1,54 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
 import ticketsService from "./ticketsService";
-
-export type Ticket = {
-  product: "iPhone" | "MacBook" | "iPad";
-  description: string;
-  user?: string;
-};
+import type { UserLocalStorage, NewTicket, CreatedTicket } from "../types";
 
 interface InitialState {
-  tickets: Ticket[];
-  ticket: Ticket | {};
+  tickets: CreatedTicket[];
+  ticket: CreatedTicket | null;
   isLoading: boolean;
   message: string;
 }
 
 const initialState: InitialState = {
   tickets: [],
-  ticket: {},
+  ticket: null,
   isLoading: false,
   message: "",
 };
 
 // Get tickets of current user
-export const getTickets = createAsyncThunk("tickets/getTickets", async () => {
-  return ticketsService.getTickets();
+export const getTickets = createAsyncThunk<CreatedTicket[]>(
+  "tickets/getTickets",
+  async () => {
+    // const token = thunkAPI.getState().auth.user?.token;
+    return ticketsService.getTickets();
+  }
+);
+
+// Create new ticket
+export const addTicket = createAsyncThunk<
+  CreatedTicket,
+  NewTicket,
+  { state: RootState }
+>("tickets/addTicket", async (ticket, thunkAPI) => {
+  const user = thunkAPI.getState().auth.user as UserLocalStorage;
+  const token = user.token;
+  if (!token) throw new Error("Not authorized");
+  return ticketsService.addTicket(ticket, token);
 });
 
 export const ticketSlice = createSlice({
   name: "ticket",
   initialState,
-  reducers: {},
+  reducers: {
+    reset: (state) => {
+      state.isLoading = false;
+      state.message = "";
+      state.ticket = null;
+      state.tickets = [];
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getTickets.pending, (state) => {
@@ -37,7 +56,7 @@ export const ticketSlice = createSlice({
       })
       .addCase(
         getTickets.fulfilled,
-        (state, action: PayloadAction<Ticket[]>) => {
+        (state, action: PayloadAction<CreatedTicket[]>) => {
           state.isLoading = false;
           state.tickets = action.payload;
         }
@@ -45,8 +64,26 @@ export const ticketSlice = createSlice({
       .addCase(getTickets.rejected, (state, action) => {
         state.isLoading = false;
         state.message = action.error.message || "Unknown error";
+      })
+      .addCase(addTicket.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(
+        addTicket.fulfilled,
+        (state, action: PayloadAction<CreatedTicket>) => {
+          state.isLoading = false;
+          state.ticket = action.payload;
+          state.message = "";
+        }
+      )
+      .addCase(addTicket.rejected, (state, action) => {
+        state.isLoading = false;
+        state.ticket = null;
+        state.message = action.error.message || "Unknown error";
       });
   },
 });
 
 export default ticketSlice.reducer;
+
+export const { reset } = ticketSlice.actions;

@@ -13,6 +13,7 @@ export interface VerifiedUser {
   name: string;
   email: string;
   id: string;
+  token: string;
 }
 
 const protect: RequestHandler<{}, any, { user: VerifiedUser }> = async (
@@ -40,6 +41,7 @@ const protect: RequestHandler<{}, any, { user: VerifiedUser }> = async (
         id: user._id.toString(),
         name: user.name,
         email: user.email,
+        token,
       };
 
       next();

@@ -7,8 +7,25 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NewTicket from "./pages/NewTicket";
+import Tickets from "./pages/Tickets";
+
+import { getMe } from "./features/auth/authSlice";
+import { useAppSelector, useAppDispatch } from "./app/hooks";
+import { useEffect } from "react";
+import Spinner from "./components/Spinner";
 
 function App() {
+  const { isLoading } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getMe());
+  }, []);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <>
       <Router>
@@ -23,6 +40,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <NewTicket />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/tickets"
+              element={
+                <PrivateRoute>
+                  <Tickets />
                 </PrivateRoute>
               }
             />

@@ -111,6 +111,7 @@ export const getMe: RequestHandler<{}, any, { user: VerifiedUser }> = async (
       id: req.body.user.id,
       email: req.body.user.email,
       name: req.body.user.name,
+      token: req.body.user.token,
     };
 
     res.status(200).json(user);

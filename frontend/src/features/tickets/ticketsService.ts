@@ -1,19 +1,37 @@
 import axios from "axios";
-import { User } from "../auth/authSlice";
-import { Ticket } from "./ticketSlice";
+import getErrorMessage from "../utils/getErrorMessage";
+import getTokenFromLS from "../utils/getTokenFromLS";
+import type { NewTicket, CreatedTicket } from "../types";
 
 const API_URL = "/api/tickets";
 
-const getTickets = async () => {
+const addTicket = async (
+  ticket: NewTicket,
+  token: string
+): Promise<CreatedTicket> => {
   try {
-    // Get user from local storage
-    const userLS = localStorage.getItem("user");
-    if (!userLS) {
+    if (!token) {
       throw new Error("Not authorized");
     }
 
-    // Get token from user object
-    const { token } = JSON.parse(userLS) as User;
+    const response = await axios.post(API_URL, ticket, {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    const message = getErrorMessage(error);
+
+    throw new Error(message);
+  }
+};
+
+const getTickets = async (): Promise<CreatedTicket[]> => {
+  try {
+    const token = getTokenFromLS();
+
     if (!token) {
       throw new Error("Not authorized");
     }
@@ -24,26 +42,16 @@ const getTickets = async () => {
       },
     });
 
-    const tickets = response.data as Ticket[];
+    const tickets = response.data;
 
     return tickets;
   } catch (error) {
-    let message: string;
-
-    if (axios.isAxiosError(error)) {
-      message = error.response?.data.message || error.message;
-    } else {
-      if (error instanceof Error) {
-        message = error.message;
-      } else {
-        message = String(error);
-      }
-    }
+    const message = getErrorMessage(error);
 
     throw new Error(message);
   }
 };
 
-const ticketsService = { getTickets };
+const ticketsService = { getTickets, addTicket };
 
 export default ticketsService;

@@ -1,18 +1,51 @@
-import React, { useState } from "react";
-import { useAppSelector } from "../app/hooks";
-import { User } from "../features/auth/authSlice";
+import React, { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { useNavigate } from "react-router-dom";
+import { addTicket, reset } from "../features/tickets/ticketSlice";
+import { Product } from "../features/types";
+import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
+import type { UserLocalStorage } from "../features/types";
 
 const NewTicket = () => {
   const auth = useAppSelector((state) => state.auth);
-  const user = auth.user as User;
+  const user = auth.user as UserLocalStorage;
+  const ticket = useAppSelector((state) => state.ticket);
+  const { message, isLoading, ticket: currentTicket } = ticket;
+  const dispatch = useAppDispatch();
   const [name] = useState(user.name);
   const [email] = useState(user.email);
-  const [product, setProduct] = useState("");
+  const [product, setProduct] = useState<Product>(Product.iPhone);
   const [description, setDescription] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (currentTicket) {
+      dispatch(reset());
+      navigate("/");
+    }
+
+    if (message) {
+      toast.error(message);
+    }
+  }, [message, ticket, dispatch, navigate, currentTicket]);
+
+  const onSelect = (e: React.FormEvent<HTMLSelectElement>) => {
+    const selectedProduct = e.currentTarget.value as Product;
+
+    setProduct(selectedProduct);
+  };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const newTicket = { product, description };
+
+    dispatch(addTicket(newTicket));
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -38,11 +71,13 @@ const NewTicket = () => {
               name="product"
               id="product"
               value={product}
-              onChange={(e) => setProduct(e.target.value)}
+              onChange={onSelect}
             >
-              <option value="iPhone">iPhone</option>
-              <option value="MacBook">iPhone</option>
-              <option value="iMac">iMac</option>
+              {Object.values(Product).map((value, id) => (
+                <option value={value} key={id}>
+                  {value}
+                </option>
+              ))}
             </select>
           </div>
           <div className="form-group">

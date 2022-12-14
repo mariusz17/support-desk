@@ -13,21 +13,19 @@ const Login = () => {
   });
   const { email, password } = formData;
   const dispatch = useAppDispatch();
-  const { user, isLoading, isSuccess, message, isError } = useAppSelector(
-    (state) => state.auth
-  );
+  const { user, isLoading, message } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isError) {
+    if (message) {
       toast.error(message);
       dispatch(reset());
     }
 
-    if (user || isSuccess) {
+    if (user) {
       navigate("/");
     }
-  }, [isError, message, dispatch, user, isSuccess, navigate]);
+  }, [message, dispatch, user, navigate]);
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
