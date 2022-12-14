@@ -18,13 +18,16 @@ const initialState: InitialState = {
 };
 
 // Get tickets of current user
-export const getTickets = createAsyncThunk<CreatedTicket[]>(
-  "tickets/getTickets",
-  async () => {
-    // const token = thunkAPI.getState().auth.user?.token;
-    return ticketsService.getTickets();
-  }
-);
+export const getTickets = createAsyncThunk<
+  CreatedTicket[],
+  void,
+  { state: RootState }
+>("tickets/getTickets", async (_, thunkAPI) => {
+  const user = thunkAPI.getState().auth.user;
+  const token = user?.token;
+  if (!token) throw new Error("Not authorized");
+  return ticketsService.getTickets(token);
+});
 
 // Create new ticket
 export const addTicket = createAsyncThunk<
@@ -32,8 +35,8 @@ export const addTicket = createAsyncThunk<
   NewTicket,
   { state: RootState }
 >("tickets/addTicket", async (ticket, thunkAPI) => {
-  const user = thunkAPI.getState().auth.user as UserLocalStorage;
-  const token = user.token;
+  const user = thunkAPI.getState().auth.user;
+  const token = user?.token;
   if (!token) throw new Error("Not authorized");
   return ticketsService.addTicket(ticket, token);
 });
