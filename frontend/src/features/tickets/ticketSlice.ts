@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import ticketsService from "./ticketsService";
+import ticketsService from "./ticketService";
 import type { UserLocalStorage, NewTicket, CreatedTicket } from "../types";
 
 interface InitialState {
