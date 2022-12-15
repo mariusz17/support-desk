@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import Spinner from "../components/Spinner";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { register, reset } from "../features/auth/authSlice";
+import { register } from "../features/auth/authSlice";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -16,19 +16,7 @@ const Register = () => {
   const { name, email, password, password2 } = formData;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { user, isLoading, message } = useAppSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (message) {
-      toast.error(message);
-      dispatch(reset());
-    }
-
-    // Redirect if logged in
-    if (user) {
-      navigate("/");
-    }
-  }, [user, message, dispatch, navigate]);
+  const { isLoading } = useAppSelector((state) => state.auth);
 
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
@@ -56,7 +44,13 @@ const Register = () => {
         password2,
       };
 
-      dispatch(register(userData));
+      dispatch(register(userData))
+        .unwrap()
+        .then((user) => {
+          toast.success(`You are now logged in as ${user.name}`);
+          navigate("/");
+        })
+        .catch(toast.error);
     }
   };
 
