@@ -1,5 +1,5 @@
 import axios from "axios";
-import getErrorMessage from "../utils/getErrorMessage";
+import extractErrorMessage from "../utils/extractErrorMessage";
 import getTokenFromLS from "../utils/getTokenFromLS";
 import type { UserLogin, UserRegister, UserLocalStorage } from "../types";
 
@@ -16,7 +16,7 @@ const register = async (userData: UserRegister): Promise<UserLocalStorage> => {
 
     return response.data;
   } catch (error) {
-    const message = getErrorMessage(error);
+    const message = extractErrorMessage(error);
 
     throw new Error(message);
   }
@@ -33,7 +33,7 @@ const login = async (userData: UserLogin): Promise<UserLocalStorage> => {
 
     return response.data;
   } catch (error) {
-    const message = getErrorMessage(error);
+    const message = extractErrorMessage(error);
 
     throw new Error(message);
   }
@@ -56,7 +56,7 @@ const getMe = async (): Promise<UserLocalStorage> => {
 
     return response.data;
   } catch (error) {
-    const message = getErrorMessage(error);
+    const message = extractErrorMessage(error);
 
     throw new Error(message);
   }

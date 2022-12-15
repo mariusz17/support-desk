@@ -1,5 +1,5 @@
 import axios from "axios";
-import getErrorMessage from "../utils/getErrorMessage";
+import extractErrorMessage from "../utils/extractErrorMessage";
 import type { NewTicket, CreatedTicket } from "../types";
 
 const API_URL = "/api/tickets";
@@ -17,7 +17,7 @@ const addTicket = async (
 
     return response.data;
   } catch (error) {
-    const message = getErrorMessage(error);
+    const message = extractErrorMessage(error);
 
     throw new Error(message);
   }
@@ -35,7 +35,7 @@ const getTickets = async (token: string): Promise<CreatedTicket[]> => {
 
     return tickets;
   } catch (error) {
-    const message = getErrorMessage(error);
+    const message = extractErrorMessage(error);
 
     throw new Error(message);
   }
