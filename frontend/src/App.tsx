@@ -10,21 +10,15 @@ import NewTicket from "./pages/NewTicket";
 import Tickets from "./pages/Tickets";
 
 import { getMe } from "./features/auth/authSlice";
-import { useAppSelector, useAppDispatch } from "./app/hooks";
+import { useAppDispatch } from "./app/hooks";
 import { useEffect } from "react";
-import Spinner from "./components/Spinner";
 
 function App() {
-  const { isLoading } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getMe());
   }, [dispatch]);
-
-  if (isLoading) {
-    return <Spinner />;
-  }
 
   return (
     <>
