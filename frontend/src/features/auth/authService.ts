@@ -1,5 +1,4 @@
 import axios from "axios";
-import extractErrorMessage from "../utils/extractErrorMessage";
 import getTokenFromLS from "../utils/getTokenFromLS";
 import type { UserLogin, UserRegister, UserLocalStorage } from "../types";
 
