@@ -5,14 +5,14 @@ import type { NewTicket, CreatedTicket } from "../types";
 import extractErrorMessage from "../utils/extractErrorMessage";
 
 interface InitialState {
-  tickets: CreatedTicket[];
+  tickets: CreatedTicket[] | null;
   ticket: CreatedTicket | null;
   isLoading: boolean;
   message: string;
 }
 
 const initialState: InitialState = {
-  tickets: [],
+  tickets: null,
   ticket: null,
   isLoading: false,
   message: "",
@@ -51,32 +51,26 @@ export const addTicket = createAsyncThunk<
 export const ticketSlice = createSlice({
   name: "ticket",
   initialState,
-  reducers: {
-    reset: (state) => {
-      state.isLoading = false;
-      state.message = "";
-      state.ticket = null;
-      state.tickets = [];
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getTickets.pending, (state) => {
-        state.isLoading = true;
+        state.ticket = null;
+        state.tickets = null;
       })
       .addCase(
         getTickets.fulfilled,
         (state, action: PayloadAction<CreatedTicket[]>) => {
-          state.isLoading = false;
           state.tickets = action.payload;
         }
       )
       .addCase(getTickets.rejected, (state, action) => {
-        state.isLoading = false;
         state.message = action.error.message || "Unknown error";
       })
       .addCase(addTicket.pending, (state) => {
         state.isLoading = true;
+        state.ticket = null;
+        state.tickets = null;
       })
       .addCase(
         addTicket.fulfilled,
@@ -85,12 +79,10 @@ export const ticketSlice = createSlice({
           state.ticket = action.payload;
         }
       )
-      .addCase(addTicket.rejected, (state, action) => {
+      .addCase(addTicket.rejected, (state) => {
         state.isLoading = false;
       });
   },
 });
 
 export default ticketSlice.reducer;
-
-export const { reset } = ticketSlice.actions;

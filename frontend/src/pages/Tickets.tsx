@@ -1,16 +1,21 @@
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { getTickets } from "../features/tickets/ticketSlice";
+import Spinner from "../components/Spinner";
 
 const Tickets = () => {
-  const ticket = useAppSelector((state) => state.ticket);
+  const { tickets } = useAppSelector((state) => state.ticket);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getTickets());
+    if (!tickets) {
+      dispatch(getTickets());
+    }
   }, [dispatch]);
 
-  console.log(ticket.tickets);
+  if (!tickets) return <Spinner />;
+
+  console.log(tickets);
 
   return <h1>Tickets</h1>;
 };

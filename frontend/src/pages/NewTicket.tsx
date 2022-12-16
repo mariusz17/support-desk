@@ -8,10 +8,11 @@ import Spinner from "../components/Spinner";
 import type { UserLocalStorage } from "../features/types";
 
 const NewTicket = () => {
-  const auth = useAppSelector((state) => state.auth);
-  const user = auth.user as UserLocalStorage;
-  const ticket = useAppSelector((state) => state.ticket);
-  const { isLoading } = ticket;
+  const authState = useAppSelector((state) => state.auth);
+  // We know user will be of type UserLocalStorage,
+  // because NewTicket page is in Private Route
+  const user = authState.user as UserLocalStorage;
+  const { isLoading } = useAppSelector((state) => state.ticket);
   const dispatch = useAppDispatch();
   const [name] = useState(user.name);
   const [email] = useState(user.email);
@@ -33,7 +34,7 @@ const NewTicket = () => {
       .unwrap()
       .then((ticket) => {
         toast.success(`Created ticket with id: ${ticket.user}`);
-        navigate("/");
+        navigate("/tickets");
       })
       .catch(toast.error);
   };
