@@ -11,7 +11,7 @@ const Tickets = () => {
     if (!tickets) {
       dispatch(getTickets());
     }
-  }, [dispatch]);
+  }, [dispatch, tickets]);
 
   if (!tickets) return <Spinner />;
 
