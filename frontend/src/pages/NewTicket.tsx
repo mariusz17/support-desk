@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
-import { addTicket, reset } from "../features/tickets/ticketSlice";
+import { addTicket } from "../features/tickets/ticketSlice";
 import { Product } from "../features/types";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
@@ -11,24 +11,13 @@ const NewTicket = () => {
   const auth = useAppSelector((state) => state.auth);
   const user = auth.user as UserLocalStorage;
   const ticket = useAppSelector((state) => state.ticket);
-  const { message, isLoading, ticket: currentTicket } = ticket;
+  const { isLoading } = ticket;
   const dispatch = useAppDispatch();
   const [name] = useState(user.name);
   const [email] = useState(user.email);
   const [product, setProduct] = useState<Product>(Product.iPhone);
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (currentTicket) {
-      dispatch(reset());
-      navigate("/");
-    }
-
-    if (message) {
-      toast.error(message);
-    }
-  }, [message, ticket, dispatch, navigate, currentTicket]);
 
   const onSelect = (e: React.FormEvent<HTMLSelectElement>) => {
     const selectedProduct = e.currentTarget.value as Product;
@@ -40,7 +29,13 @@ const NewTicket = () => {
     e.preventDefault();
     const newTicket = { product, description };
 
-    dispatch(addTicket(newTicket));
+    dispatch(addTicket(newTicket))
+      .unwrap()
+      .then((ticket) => {
+        toast.success(`Created ticket with id: ${ticket.user}`);
+        navigate("/");
+      })
+      .catch(toast.error);
   };
 
   if (isLoading) {

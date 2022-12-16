@@ -2,6 +2,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import ticketsService from "./ticketService";
 import type { NewTicket, CreatedTicket } from "../types";
+import extractErrorMessage from "../utils/extractErrorMessage";
 
 interface InitialState {
   tickets: CreatedTicket[];
@@ -23,10 +24,13 @@ export const getTickets = createAsyncThunk<
   void,
   { state: RootState }
 >("tickets/getTickets", async (_, thunkAPI) => {
-  const user = thunkAPI.getState().auth.user;
-  const token = user?.token;
-  if (!token) throw new Error("Not authorized");
-  return ticketsService.getTickets(token);
+  try {
+    const token = thunkAPI.getState().auth.user?.token;
+    if (!token) throw new Error("Not authorized");
+    return ticketsService.getTickets(token);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(extractErrorMessage(error));
+  }
 });
 
 // Create new ticket
@@ -35,10 +39,13 @@ export const addTicket = createAsyncThunk<
   NewTicket,
   { state: RootState }
 >("tickets/addTicket", async (ticket, thunkAPI) => {
-  const user = thunkAPI.getState().auth.user;
-  const token = user?.token;
-  if (!token) throw new Error("Not authorized");
-  return ticketsService.addTicket(ticket, token);
+  try {
+    const token = thunkAPI.getState().auth.user?.token;
+    if (!token) throw new Error("Not authorized");
+    return ticketsService.addTicket(ticket, token);
+  } catch (error) {
+    return thunkAPI.rejectWithValue(extractErrorMessage(error));
+  }
 });
 
 export const ticketSlice = createSlice({
@@ -76,13 +83,10 @@ export const ticketSlice = createSlice({
         (state, action: PayloadAction<CreatedTicket>) => {
           state.isLoading = false;
           state.ticket = action.payload;
-          state.message = "";
         }
       )
       .addCase(addTicket.rejected, (state, action) => {
         state.isLoading = false;
-        state.ticket = null;
-        state.message = action.error.message || "Unknown error";
       });
   },
 });
