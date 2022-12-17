@@ -1,5 +1,5 @@
 import { Navigate } from "react-router";
-import useAuthStatus from "../hooks/useAuthStatus";
+import { useAppSelector } from "../app/hooks";
 import Spinner from "./Spinner";
 
 type Props = {
@@ -7,13 +7,12 @@ type Props = {
 };
 
 const PrivateRoute = ({ children }: Props) => {
-  const { loggedIn, checkingStatus } = useAuthStatus();
+  const { user, isLoading } = useAppSelector((state) => state.auth);
 
-  if (checkingStatus) {
+  if (isLoading) {
     return <Spinner />;
   }
-
-  return loggedIn ? <>{children}</> : <Navigate to="/login" />;
+  return user ? <>{children}</> : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;

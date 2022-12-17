@@ -9,9 +9,14 @@ export interface InitialState {
   isLoading: boolean;
 }
 
+// Set isLoading to true by default here, so Private Route
+// components will not redirect to login page, even though we are logged in.
+// It happens, we dispatch async getMe action in App (getMe)
+// to verify user from Local Storage by the backend
+// and that action sets loading to false when rejected or fulfilled.
 const initialState: InitialState = {
   user: null,
-  isLoading: false,
+  isLoading: true,
 };
 
 // Register new user
@@ -94,6 +99,7 @@ export const authSlice = createSlice({
       })
       .addCase(getMe.pending, (state) => {
         state.isLoading = true;
+        state.user = null;
       })
       .addCase(
         getMe.fulfilled,
