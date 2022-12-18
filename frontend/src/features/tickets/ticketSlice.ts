@@ -44,9 +44,6 @@ export const addTicket = createAsyncThunk<
     if (!token) throw new Error("Not authorized");
     return await ticketsService.addTicket(ticket, token);
   } catch (error) {
-    console.log("to się nie dzieje?");
-    console.log(extractErrorMessage(error));
-
     return thunkAPI.rejectWithValue(extractErrorMessage(error));
   }
 });
