@@ -1,8 +1,7 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
-import authService from "./authService";
-import extractErrorMessage from "../utils/extractErrorMessage";
-import type { UserLogin, UserRegister, UserLocalStorage } from "../types";
+import { register, login, getMe } from "./authService";
+import type { UserLocalStorage } from "../types";
 
 export interface InitialState {
   user: UserLocalStorage | null;
@@ -18,45 +17,6 @@ const initialState: InitialState = {
   user: null,
   isLoading: true,
 };
-
-// Register new user
-export const register = createAsyncThunk<UserLocalStorage, UserRegister>(
-  "auth/register",
-  async (user, thunkAPI) => {
-    try {
-      return await authService.register(user);
-    } catch (error) {
-      const message = extractErrorMessage(error);
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-// Login user
-export const login = createAsyncThunk<UserLocalStorage, UserLogin>(
-  "auth/login",
-  async (user, thunkAPI) => {
-    try {
-      return await authService.login(user);
-    } catch (error) {
-      const message = extractErrorMessage(error);
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
-
-// Get user from local storage and authorize by backend
-export const getMe = createAsyncThunk<UserLocalStorage, void>(
-  "auth/getMe",
-  async (_, thunkAPI) => {
-    try {
-      return await authService.getMe();
-    } catch (error) {
-      const message = extractErrorMessage(error);
-      return thunkAPI.rejectWithValue(message);
-    }
-  }
-);
 
 export const authSlice = createSlice({
   name: "auth",

@@ -9,7 +9,7 @@ import Register from "./pages/Register";
 import NewTicket from "./pages/NewTicket";
 import Tickets from "./pages/Tickets";
 
-import { getMe } from "./features/auth/authSlice";
+import { getMe } from "./features/auth/authService";
 import { useAppDispatch } from "./app/hooks";
 import { useEffect } from "react";
 

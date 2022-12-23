@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { FaSignInAlt } from "react-icons/fa";
 import Spinner from "../components/Spinner";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { login } from "../features/auth/authSlice";
+import { login } from "../features/auth/authService";
 
 const Login = () => {
   const [formData, setFormData] = useState({
