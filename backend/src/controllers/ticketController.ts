@@ -7,25 +7,28 @@ import type { VerifiedUser } from "../middleware/authMiddleware";
 //@desc		Get tickets
 //@route	GET /api/tickets
 //@access	Private
-export const getTickets: RequestHandler<{}, ITicket[], { user: VerifiedUser }> =
-  async (req, res, next) => {
-    try {
-      //get user using id in the JWT
-      const user = await User.findById(req.body.user.id);
+export const getTickets: RequestHandler<
+  {},
+  ITicket[],
+  { user: VerifiedUser }
+> = async (req, res, next) => {
+  try {
+    //get user using id in the JWT
+    const user = await User.findById(req.body.user.id);
 
-      if (!user) {
-        throw new Error("User not found");
-      }
-
-      const tickets = await Ticket.find({
-        user: req.body.user.id,
-      });
-
-      res.status(200).json(tickets);
-    } catch (error) {
-      next(error);
+    if (!user) {
+      throw new Error("User not found");
     }
-  };
+
+    const tickets = await Ticket.find({
+      user: req.body.user.id,
+    });
+
+    res.status(200).json(tickets);
+  } catch (error) {
+    next(error);
+  }
+};
 
 //@desc		Get one ticket
 //@route	GET /api/ticket/:id
