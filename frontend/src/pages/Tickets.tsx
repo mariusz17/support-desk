@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { getTickets } from "../features/tickets/ticketService";
 import Spinner from "../components/Spinner";
+import TicketItem from "../components/TicketItem";
 import BackButton from "../components/BackButton";
 
 const Tickets = () => {
@@ -9,7 +10,7 @@ const Tickets = () => {
   const { tickets } = useAppSelector((state) => state.ticket);
   const dispatch = useAppDispatch();
 
-  // useEffect
+  // Side Effects
   useEffect(() => {
     if (!tickets) {
       dispatch(getTickets());
@@ -23,6 +24,17 @@ const Tickets = () => {
     <>
       <BackButton url="/" />
       <h1>Tickets</h1>
+      <div className="tickets">
+        <div className="ticket-headings">
+          <div>Date</div>
+          <div>Product</div>
+          <div>Status</div>
+          <div></div>
+        </div>
+        {tickets.map((ticket) => (
+          <TicketItem key={ticket._id} ticket={ticket} />
+        ))}
+      </div>
     </>
   );
 };
