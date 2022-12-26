@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import path from "path";
 import userRoutes from "./routes/userRoutes";
 import ticketRoutes from "./routes/ticketRoutes";
@@ -13,6 +14,7 @@ const PORT = config.PORT;
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
