@@ -19,7 +19,7 @@ export interface InitialState {
 // and isLoading is false).
 const initialState: InitialState = {
   user: null,
-  isLoading: false,
+  isLoading: true,
 };
 
 export const authSlice = createSlice({
