@@ -5,6 +5,7 @@ import { addTicket } from "../features/tickets/ticketService";
 import { Product } from "../features/types";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
+import BackButton from "../components/BackButton";
 import type { UserLocalStorage } from "../features/types";
 
 const NewTicket = () => {
@@ -44,6 +45,7 @@ const NewTicket = () => {
 
   return (
     <>
+      <BackButton url="/" />
       <section className="heading">
         <h1>Create New Ticket</h1>
         <p>Please fill out the form below</p>

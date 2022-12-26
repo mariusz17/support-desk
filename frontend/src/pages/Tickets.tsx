@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { getTickets } from "../features/tickets/ticketService";
 import Spinner from "../components/Spinner";
+import BackButton from "../components/BackButton";
 
 const Tickets = () => {
   const { tickets } = useAppSelector((state) => state.ticket);
@@ -17,7 +18,12 @@ const Tickets = () => {
 
   console.log(tickets);
 
-  return <h1>Tickets</h1>;
+  return (
+    <>
+      <BackButton url="/" />
+      <h1>Tickets</h1>
+    </>
+  );
 };
 
 export default Tickets;
