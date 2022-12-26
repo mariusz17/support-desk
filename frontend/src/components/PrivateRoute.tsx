@@ -17,7 +17,7 @@ const PrivateRoute = ({ children }: Props) => {
     if (!user) {
       dispatch(savePath(location.pathname));
     }
-  }, []);
+  }, [dispatch, user, location]);
 
   if (isLoading) {
     return <Spinner />;
