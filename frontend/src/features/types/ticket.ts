@@ -14,4 +14,8 @@ export type CreatedTicket = {
   product: Product;
   description: string;
   user: string;
+  _id: string;
+  createdAt: string;
+  status: string;
+  updatedAt: string;
 };
