@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { useNavigate } from "react-router-dom";
-import { addTicket } from "../features/tickets/ticketSlice";
+import { addTicket } from "../features/tickets/ticketService";
 import { Product } from "../features/types";
 import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";

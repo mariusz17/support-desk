@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import ticketsService from "./ticketService";
+import { getTickets, addTicket } from "./ticketService";
 import type { NewTicket, CreatedTicket } from "../types";
 import extractErrorMessage from "../utils/extractErrorMessage";
 
@@ -17,36 +17,6 @@ const initialState: InitialState = {
   isLoading: false,
   message: "",
 };
-
-// Get tickets of current user
-export const getTickets = createAsyncThunk<
-  CreatedTicket[],
-  void,
-  { state: RootState }
->("tickets/getTickets", async (_, thunkAPI) => {
-  try {
-    const token = thunkAPI.getState().auth.user?.token;
-    if (!token) throw new Error("Not authorized");
-    return await ticketsService.getTickets(token);
-  } catch (error) {
-    return thunkAPI.rejectWithValue(extractErrorMessage(error));
-  }
-});
-
-// Create new ticket
-export const addTicket = createAsyncThunk<
-  CreatedTicket,
-  NewTicket,
-  { state: RootState }
->("tickets/addTicket", async (ticket, thunkAPI) => {
-  try {
-    const token = thunkAPI.getState().auth.user?.token;
-    if (!token) throw new Error("Not authorized");
-    return await ticketsService.addTicket(ticket, token);
-  } catch (error) {
-    return thunkAPI.rejectWithValue(extractErrorMessage(error));
-  }
-});
 
 export const ticketSlice = createSlice({
   name: "ticket",

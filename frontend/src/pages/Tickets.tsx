@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
-import { getTickets } from "../features/tickets/ticketSlice";
+import { getTickets } from "../features/tickets/ticketService";
 import Spinner from "../components/Spinner";
 
 const Tickets = () => {
