@@ -31,7 +31,7 @@ export const getTickets: RequestHandler<
 };
 
 //@desc		Get one ticket
-//@route	GET /api/ticket/:id
+//@route	GET /api/tickets/:id
 //@access	Private
 export const getTicket: RequestHandler<
   { id: string },
@@ -70,7 +70,7 @@ export const getTicket: RequestHandler<
 };
 
 //@desc		Delete ticket
-//@route	DELETE /api/ticket/:id
+//@route	DELETE /api/tickets/:id
 //@access	Private
 export const deleteTicket: RequestHandler<
   { id: string },
@@ -111,7 +111,7 @@ export const deleteTicket: RequestHandler<
 };
 
 //@desc		Update ticket
-//@route	PUT /api/ticket/:id
+//@route	PUT /api/tickets/:id
 //@access	Private
 export const updateTicket: RequestHandler<
   { id: string },
