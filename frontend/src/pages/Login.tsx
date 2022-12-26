@@ -8,18 +8,22 @@ import { resetPath } from "../features/savePath/savePathSlice";
 import { login } from "../features/auth/authService";
 
 const Login = () => {
+  // Redux Store
+  const { isLoading } = useAppSelector((state) => state.auth);
+  const path = useAppSelector((state) => state.savedPath.path);
+  const dispatch = useAppDispatch();
+
+  // State
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
   const { email, password } = formData;
 
-  const dispatch = useAppDispatch();
-  const { isLoading } = useAppSelector((state) => state.auth);
-  const path = useAppSelector((state) => state.savedPath.path);
-
+  // Tools
   const navigate = useNavigate();
 
+  // Handlers
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
     const propName = e.currentTarget.name;
@@ -50,6 +54,7 @@ const Login = () => {
       .catch(toast.error);
   };
 
+  // Returns
   if (isLoading) {
     return <Spinner />;
   }

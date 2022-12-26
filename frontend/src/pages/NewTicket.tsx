@@ -9,17 +9,23 @@ import BackButton from "../components/BackButton";
 import type { UserLocalStorage } from "../features/types";
 
 const NewTicket = () => {
-  // We know user will be of type UserLocalStorage,
-  // because NewTicket page is in Private Route
+  // Redux Store
   const { name, email } = useAppSelector(
     (state) => state.auth.user
   ) as UserLocalStorage;
+  // Above: we know user will be of type UserLocalStorage,
+  // because NewTicket page is in Private Route
   const { isLoading } = useAppSelector((state) => state.ticket);
   const dispatch = useAppDispatch();
+
+  // State
   const [product, setProduct] = useState<Product>(Product.iPhone);
   const [description, setDescription] = useState("");
+
+  // Tools
   const navigate = useNavigate();
 
+  // Handlers
   const onSelect = (e: React.FormEvent<HTMLSelectElement>) => {
     const selectedProduct = e.currentTarget.value as Product;
 
@@ -39,6 +45,7 @@ const NewTicket = () => {
       .catch(toast.error);
   };
 
+  // Returns
   if (isLoading) {
     return <Spinner />;
   }

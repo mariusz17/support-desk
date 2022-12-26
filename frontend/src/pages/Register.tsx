@@ -7,6 +7,11 @@ import { useAppSelector, useAppDispatch } from "../app/hooks";
 import { register } from "../features/auth/authService";
 
 const Register = () => {
+  // Redux Store
+  const { isLoading } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+
+  // State
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -14,10 +19,11 @@ const Register = () => {
     password2: "",
   });
   const { name, email, password, password2 } = formData;
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const { isLoading } = useAppSelector((state) => state.auth);
 
+  // Utils
+  const navigate = useNavigate();
+
+  // Handlers
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
     const propName = e.currentTarget.name;
@@ -54,6 +60,7 @@ const Register = () => {
     }
   };
 
+  // Returns
   if (isLoading) {
     return <Spinner />;
   }

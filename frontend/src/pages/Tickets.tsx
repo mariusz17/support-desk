@@ -5,18 +5,19 @@ import Spinner from "../components/Spinner";
 import BackButton from "../components/BackButton";
 
 const Tickets = () => {
+  // Redux Store
   const { tickets } = useAppSelector((state) => state.ticket);
   const dispatch = useAppDispatch();
 
+  // useEffect
   useEffect(() => {
     if (!tickets) {
       dispatch(getTickets());
     }
   }, [dispatch, tickets]);
 
+  // Returns
   if (!tickets) return <Spinner />;
-
-  console.log(tickets);
 
   return (
     <>
