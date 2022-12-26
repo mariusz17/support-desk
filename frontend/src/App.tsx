@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NewTicket from "./pages/NewTicket";
 import Tickets from "./pages/Tickets";
+import Ticket from "./pages/Ticket";
 
 import { getMe } from "./features/auth/authService";
 import { useAppDispatch } from "./app/hooks";
@@ -42,6 +43,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <Tickets />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/tickets/:ticketId"
+              element={
+                <PrivateRoute>
+                  <Ticket />
                 </PrivateRoute>
               }
             />

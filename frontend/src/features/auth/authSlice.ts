@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { register, login, getMe } from "./authService";
+import resetReduxState from "../resetAll";
 import type { UserLocalStorage } from "../types";
 
 export interface InitialState {
@@ -25,13 +26,7 @@ const initialState: InitialState = {
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout: (state) => {
-      state.isLoading = false;
-      state.user = null;
-      localStorage.removeItem("user");
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => {
@@ -75,10 +70,13 @@ export const authSlice = createSlice({
       .addCase(getMe.rejected, (state) => {
         state.isLoading = false;
         state.user = null;
+      })
+      .addCase(resetReduxState, (state) => {
+        state.user = null;
+        state.isLoading = false;
+        localStorage.removeItem("user");
       });
   },
 });
 
 export default authSlice.reducer;
-
-export const { logout } = authSlice.actions;

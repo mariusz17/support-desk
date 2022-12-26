@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import resetReduxState from "../resetAll";
 
 interface InitialState {
   path: string;
@@ -18,6 +19,11 @@ const savePathSlice = createSlice({
     resetPath: (state) => {
       state.path = "/";
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(resetReduxState, (state) => {
+      state.path = "/";
+    });
   },
 });
 

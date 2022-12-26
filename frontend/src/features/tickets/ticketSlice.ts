@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getTickets, addTicket } from "./ticketService";
+import { getTickets, addTicket, getTicket } from "./ticketService";
+import resetReduxState from "../resetAll";
 import type { CreatedTicket } from "../types";
 
 interface InitialState {
@@ -36,18 +37,28 @@ export const ticketSlice = createSlice({
       })
       .addCase(addTicket.pending, (state) => {
         state.isLoading = true;
-        state.ticket = null;
         state.tickets = null;
       })
+      .addCase(addTicket.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(addTicket.rejected, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(getTicket.pending, (state) => {
+        state.ticket = null;
+      })
       .addCase(
-        addTicket.fulfilled,
+        getTicket.fulfilled,
         (state, action: PayloadAction<CreatedTicket>) => {
-          state.isLoading = false;
           state.ticket = action.payload;
         }
       )
-      .addCase(addTicket.rejected, (state) => {
+      .addCase(resetReduxState, (state) => {
+        state.tickets = null;
+        state.ticket = null;
         state.isLoading = false;
+        state.message = "";
       });
   },
 });
