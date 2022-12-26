@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
 import { getTickets, addTicket } from "./ticketService";
-import type { NewTicket, CreatedTicket } from "../types";
-import extractErrorMessage from "../utils/extractErrorMessage";
+import type { CreatedTicket } from "../types";
 
 interface InitialState {
   tickets: CreatedTicket[] | null;
