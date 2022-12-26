@@ -8,14 +8,18 @@ export interface InitialState {
   isLoading: boolean;
 }
 
-// Set isLoading to true by default here, so Private Route
-// components will not redirect to login page, even though we are logged in.
-// It happens, we dispatch async getMe action in App (getMe)
-// to verify user from Local Storage by the backend
-// and that action sets loading to false when rejected or fulfilled.
+// I set isLoading to true by default, because of the App logic
+// I chose. The logic is that I dispatch getMe action in App.tsx
+// and that action gets user from local storage and sends it to backend
+// to verify. When verified, the user is set in Redux store, if not,
+// the user is set to null. With this logic if I set isLoading to false
+// by default and user accesses private route directly (like for example /tickets)
+// then PrivateRoute component will instantly redirect user to login page,
+// not waiting for action getMe to end (because user initial state is null
+// and isLoading is false).
 const initialState: InitialState = {
   user: null,
-  isLoading: true,
+  isLoading: false,
 };
 
 export const authSlice = createSlice({
