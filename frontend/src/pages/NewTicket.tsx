@@ -8,14 +8,13 @@ import Spinner from "../components/Spinner";
 import type { UserLocalStorage } from "../features/types";
 
 const NewTicket = () => {
-  const authState = useAppSelector((state) => state.auth);
   // We know user will be of type UserLocalStorage,
   // because NewTicket page is in Private Route
-  const user = authState.user as UserLocalStorage;
+  const { name, email } = useAppSelector(
+    (state) => state.auth.user
+  ) as UserLocalStorage;
   const { isLoading } = useAppSelector((state) => state.ticket);
   const dispatch = useAppDispatch();
-  const [name] = useState(user.name);
-  const [email] = useState(user.email);
   const [product, setProduct] = useState<Product>(Product.iPhone);
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
