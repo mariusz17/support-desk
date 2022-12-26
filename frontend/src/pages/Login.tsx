@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaSignInAlt } from "react-icons/fa";
 import Spinner from "../components/Spinner";
 import { useAppSelector, useAppDispatch } from "../app/hooks";
+import { resetPath } from "../features/savePath/savePathSlice";
 import { login } from "../features/auth/authService";
 
 const Login = () => {
@@ -15,6 +16,7 @@ const Login = () => {
 
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.auth);
+  const path = useAppSelector((state) => state.savedPath.path);
 
   const navigate = useNavigate();
 
@@ -42,7 +44,8 @@ const Login = () => {
       .unwrap()
       .then((user) => {
         toast.success(`Logged in as ${user.name}`);
-        navigate("/");
+        navigate(path);
+        dispatch(resetPath());
       })
       .catch(toast.error);
   };
