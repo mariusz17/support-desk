@@ -23,7 +23,6 @@ export const ticketSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getTickets.pending, (state) => {
-        state.ticket = null;
         state.tickets = null;
       })
       .addCase(
