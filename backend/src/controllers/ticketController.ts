@@ -1,4 +1,3 @@
-import User from "../models/userModel";
 import Ticket, { ITicket } from "../models/ticketModel";
 import { isValidObjectId } from "mongoose";
 import type { RequestHandler, Response } from "express";
