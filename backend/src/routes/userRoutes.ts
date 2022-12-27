@@ -2,6 +2,7 @@ import express from "express";
 import { registerUser, loginUser, getMe } from "../controllers/userController";
 import protect from "../middleware/authMiddleware";
 
+// path: /api/users
 const router = express.Router();
 
 router.post("/", registerUser);

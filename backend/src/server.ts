@@ -35,4 +35,8 @@ if (config.NODE_ENV === "production") {
 
 app.use(errorHandler);
 
+app.use((_, res) => {
+  res.status(404).json({ message: "Sorry can't find that!" });
+});
+
 app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));

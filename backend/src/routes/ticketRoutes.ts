@@ -7,8 +7,13 @@ import {
   deleteTicket,
 } from "../controllers/ticketController";
 import protect from "../middleware/authMiddleware";
+import noteRouter from "./noteRoutes";
 
+// path: /api/tickets
 const router = express.Router();
+
+// reroute into note router
+router.use("/:id/notes", noteRouter);
 
 router.route("/").get(protect, getTickets).post(protect, createTicket);
 router
