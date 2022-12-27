@@ -70,3 +70,30 @@ export const getTicket = createAsyncThunk<
     return thunkAPI.rejectWithValue(extractErrorMessage(error));
   }
 });
+
+export const closeTicket = createAsyncThunk<
+  CreatedTicket,
+  string,
+  { state: RootState }
+>("tickets/closeTicket", async (ticketId, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user?.token;
+    if (!token) throw new Error("Not authorized");
+
+    const response = await axios.put(
+      API_URL + `/${ticketId}`,
+      {
+        status: "closed",
+      },
+      {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(extractErrorMessage(error));
+  }
+});
