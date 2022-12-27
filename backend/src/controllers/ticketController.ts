@@ -13,13 +13,6 @@ export const getTickets: RequestHandler<
   { user: VerifiedUser }
 > = async (req, res, next) => {
   try {
-    //get user using id in the JWT
-    const user = await User.findById(req.body.user.id);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
     const tickets = await Ticket.find({
       user: req.body.user.id,
     });
@@ -39,13 +32,6 @@ export const getTicket: RequestHandler<
   { user: VerifiedUser }
 > = async (req, res, next) => {
   try {
-    //get user using id in the JWT
-    const user = await User.findById(req.body.user.id);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
     if (isValidObjectId(req.params.id)) {
       const ticket = await Ticket.findById(req.params.id);
 
@@ -78,13 +64,6 @@ export const deleteTicket: RequestHandler<
   { user: VerifiedUser }
 > = async (req, res, next) => {
   try {
-    //get user using id in the JWT
-    const user = await User.findById(req.body.user.id);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
     if (isValidObjectId(req.params.id)) {
       const ticket = await Ticket.findById(req.params.id);
 
@@ -124,13 +103,6 @@ export const updateTicket: RequestHandler<
   }
 > = async (req, res, next) => {
   try {
-    //get user using id in the JWT
-    const user = await User.findById(req.body.user.id);
-
-    if (!user) {
-      throw new Error("User not found");
-    }
-
     if (isValidObjectId(req.params.id)) {
       const ticket = await Ticket.findById(req.params.id);
 
@@ -178,14 +150,6 @@ export const createTicket: RequestHandler<
     if (!product || !description) {
       res.status(400);
       throw new Error("Please include product and description");
-    }
-
-    //get user using id in the JWT
-    const user = await User.findById(req.body.user.id);
-
-    if (!user) {
-      res.status(401);
-      throw new Error("User not found");
     }
 
     const ticket = await Ticket.create({
