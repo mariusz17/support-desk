@@ -28,7 +28,6 @@ const Ticket = () => {
   }, [dispatch, ticketId, navigate, ticket?._id]);
 
   // Handlers
-
   const onTicketClose = () => {
     dispatch(closeTicket(ticketId as string))
       .unwrap()
