@@ -26,10 +26,8 @@ const NewTicket = () => {
   const navigate = useNavigate();
 
   // Handlers
-  const onSelect = (e: React.FormEvent<HTMLSelectElement>) => {
-    const selectedProduct = e.currentTarget.value as Product;
-
-    setProduct(selectedProduct);
+  const onSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setProduct(e.target.value as Product);
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -24,14 +24,11 @@ const Register = () => {
   const navigate = useNavigate();
 
   // Handlers
-  const onChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const newValue = e.currentTarget.value;
-    const propName = e.currentTarget.name;
-
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => {
       return {
         ...prev,
-        [propName]: newValue,
+        [e.target.name]: e.target.value,
       };
     });
   };
