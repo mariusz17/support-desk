@@ -31,16 +31,16 @@ const Ticket = () => {
           navigate("/tickets");
         });
     }
-  }, [dispatch, ticketId, navigate, ticket?._id]);
+  }, [dispatch, navigate, ticket?._id, ticketId]);
 
   // Get notes for ticket
   useEffect(() => {
     if (ticketId) {
       dispatch(getNotes(ticketId));
 
-      // return () => {
-      //   dispatch(resetNotes());
-      // };
+      return () => {
+        dispatch(resetNotes());
+      };
     }
   }, [dispatch, ticketId]);
 
