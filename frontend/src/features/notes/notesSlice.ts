@@ -28,9 +28,6 @@ const notesSlice = createSlice({
         state.note = null;
         state.notes = null;
       })
-      .addCase(getNotes.pending, (state) => {
-        state.notes = [];
-      })
       .addCase(
         getNotes.fulfilled,
         (state, action: PayloadAction<CreatedNote[]>) => {
