@@ -16,12 +16,17 @@ const initialState: InitialState = {
 const notesSlice = createSlice({
   name: "notes",
   initialState,
-  reducers: {},
+  reducers: {
+    reset: (state) => {
+      state.note = null;
+      state.notes = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(resetReduxState, (state) => {
         state.note = null;
-        state.notes = [];
+        state.notes = null;
       })
       .addCase(getNotes.pending, (state) => {
         state.notes = [];
@@ -42,5 +47,7 @@ const notesSlice = createSlice({
       );
   },
 });
+
+export const { reset } = notesSlice.actions;
 
 export default notesSlice.reducer;

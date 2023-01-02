@@ -11,5 +11,6 @@ export type CreatedNote = {
   ticket: string;
   text: string;
   isStaff: boolean;
+  createdAt: string;
   staffId?: string;
 };
