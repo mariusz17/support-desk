@@ -9,6 +9,7 @@ import Register from "./pages/Register";
 import NewTicket from "./pages/NewTicket";
 import Tickets from "./pages/Tickets";
 import Ticket from "./pages/Ticket";
+import NotFound from "./components/NotFound";
 
 import { getMe } from "./features/auth/authService";
 import { useAppDispatch } from "./app/hooks";
@@ -54,6 +55,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path="/*" element={<NotFound />} />
           </Routes>
         </div>
       </Router>
