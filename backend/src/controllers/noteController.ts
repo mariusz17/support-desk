@@ -60,6 +60,11 @@ export const addNote: RequestHandler<
         throw new Error("Not authorized");
       }
 
+      if (!req.body.note) {
+        res.status(400);
+        throw new Error("Please add note text");
+      }
+
       const note = await Note.create({
         user: req.body.user.id,
         ticket: req.params.id,

@@ -1,10 +1,9 @@
 export type NewNote = {
-  user: string;
-  ticket: string;
-  text: string;
+  note: string;
   isStaff?: boolean;
   staffId?: string;
 };
+
 export type CreatedNote = {
   _id: string;
   user: string;
