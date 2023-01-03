@@ -4,14 +4,18 @@ import axios from "axios";
 import getTokenFromLS from "../utils/getTokenFromLS";
 import type { UserLogin, UserRegister, UserLocalStorage } from "../types";
 
-const API_URL = "/api/users";
+const API_URL = process.env.REACT_APP_API_URL;
 
 // Register user
 export const register = createAsyncThunk<UserLocalStorage, UserRegister>(
   "auth/register",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post(API_URL, user);
+      if (!API_URL) {
+        throw new Error("API URL was not found in environment variables");
+      }
+
+      const response = await axios.post(API_URL + "/users", user);
 
       if (response.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
@@ -30,7 +34,11 @@ export const login = createAsyncThunk<UserLocalStorage, UserLogin>(
   "auth/login",
   async (user, thunkAPI) => {
     try {
-      const response = await axios.post(API_URL + "/login", user);
+      if (!API_URL) {
+        throw new Error("API URL was not found in environment variables");
+      }
+
+      const response = await axios.post(API_URL + "/users/login", user);
 
       if (response.data) {
         localStorage.setItem("user", JSON.stringify(response.data));
@@ -49,13 +57,17 @@ export const getMe = createAsyncThunk<UserLocalStorage, void>(
   "auth/getMe",
   async (_, thunkAPI) => {
     try {
+      if (!API_URL) {
+        throw new Error("API URL was not found in environment variables");
+      }
+
       const token = getTokenFromLS();
 
       if (!token) {
         throw new Error("Not authorized");
       }
 
-      const response = await axios.get(API_URL + "/me", {
+      const response = await axios.get(API_URL + "/users/me", {
         headers: {
           authorization: `Bearer ${token}`,
         },

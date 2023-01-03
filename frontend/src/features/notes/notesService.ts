@@ -4,7 +4,7 @@ import { RootState } from "../../app/store";
 import axios from "axios";
 import type { CreatedNote, NewNote } from "../types";
 
-const API_URL = "/api/tickets";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const getNotes = createAsyncThunk<
   CreatedNote[],
@@ -12,10 +12,14 @@ export const getNotes = createAsyncThunk<
   { state: RootState }
 >("notes/getNotes", async (ticketId, thunkAPI) => {
   try {
+    if (!API_URL) {
+      throw new Error("API URL was not found in environment variables");
+    }
+
     const token = thunkAPI.getState().auth.user?.token;
     if (!token) throw new Error("Not authorized");
 
-    const url = `${API_URL}/${ticketId}/notes`;
+    const url = `${API_URL}/tickets/${ticketId}/notes`;
     const response = await axios.get(url, {
       headers: {
         authorization: `Bearer ${token}`,
@@ -34,13 +38,17 @@ export const addNote = createAsyncThunk<
   { state: RootState }
 >("notes/addNote", async (newNote, thunkAPI) => {
   try {
+    if (!API_URL) {
+      throw new Error("API URL was not found in environment variables");
+    }
+
     const token = thunkAPI.getState().auth.user?.token;
     if (!token) throw new Error("Not authorized");
 
     const ticketId = thunkAPI.getState().ticket.ticket?._id;
     if (!ticketId) throw new Error("Ticket not found");
 
-    const url = `${API_URL}/${ticketId}/notes`;
+    const url = `${API_URL}/tickets/${ticketId}/notes`;
     const response = await axios.post(url, newNote, {
       headers: {
         authorization: `Bearer ${token}`,
