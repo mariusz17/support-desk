@@ -2,8 +2,9 @@ This is project from Udemy course React Front To Back 2022 by Brad Traversy: htt
 
 The project is originally written in JS and I converted it to TypeScript.
 
-I deployed backend on a private vps server and frontend on Vercel.
-Live demo of the project: https://support-desk-ten.vercel.app/
+I deployed backend on a private VPS server and frontend on Vercel.
+
+### LIVE demo: https://support-desk-ten.vercel.app/
 
 ## My personal tweaks:
 
