@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import path from "path";
 import userRoutes from "./routes/userRoutes";
 import ticketRoutes from "./routes/ticketRoutes";
 import errorHandler from "./middleware/errorMiddleware";
