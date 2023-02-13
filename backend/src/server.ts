@@ -1,10 +1,10 @@
-import express from "express";
-import cors from "cors";
-import userRoutes from "./routes/userRoutes";
-import ticketRoutes from "./routes/ticketRoutes";
-import errorHandler from "./middleware/errorMiddleware";
-import { connectDB, config } from "./config/config";
-import "colors";
+import express from 'express';
+import cors from 'cors';
+import userRoutes from './routes/userRoutes';
+import ticketRoutes from './routes/ticketRoutes';
+import errorHandler from './middleware/errorMiddleware';
+import { connectDB, config } from './config/config';
+import 'colors';
 
 // Connect to database
 connectDB();
@@ -13,15 +13,19 @@ const PORT = config.PORT;
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: config.CORS_URL,
+  })
+);
 app.use(express.json());
 
 // Routes
-app.use("/api/users", userRoutes);
-app.use("/api/tickets", ticketRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/tickets', ticketRoutes);
 
-app.get("/", (req, res) => {
-  res.status(200).json({ message: "Welcome to support desk API" });
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'Welcome to support desk API' });
 });
 
 app.use(errorHandler);

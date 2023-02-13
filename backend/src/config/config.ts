@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import "colors";
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import 'colors';
 
 dotenv.config();
 
@@ -10,6 +10,7 @@ const envData = {
   PORT: process.env.PORT,
   MONGO_URI: process.env.MONGO_URI,
   JWT_SECRET: process.env.JWT_SECRET,
+  CORS_URL: process.env.CORS_URL,
 };
 
 interface Config {
@@ -17,10 +18,11 @@ interface Config {
   PORT: string;
   MONGO_URI: string;
   JWT_SECRET: string;
+  CORS_URL: string;
 }
 
 for (const [key, value] of Object.entries(envData)) {
-  if (typeof value !== "string") {
+  if (typeof value !== 'string') {
     throw new Error(`Missing key ${key} in env file.`);
   }
 }
